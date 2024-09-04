@@ -42,6 +42,30 @@ namespace Events
     {
         public SavingAccount(decimal balance) : base(balance)
         {
+            OverdrawnEventHandler += OnOverdrawn;
+        }
+
+        public void Withdraw(decimal amount)
+        {
+            if (Balance >= amount)
+            {
+                Balance -= amount;
+                MessageBox.Show($"Successfull - Remaining balance: {Balance}");
+            }
+            else
+            {
+                decimal insufficientAmount = amount - Balance;
+                OnOverdrawnEventHandler(insufficientAmount);
+            }
+        }
+
+        private void OnOverdrawn(object sender, EventArgs e)
+        {
+            OverdrawnEventArgs args = (OverdrawnEventArgs)e;
+            SavingAccount bankAccount = (SavingAccount)sender;
+
+
+            MessageBox.Show($"Unsuccessful - Insufficient amount: {args.SubAmount}");
         }
     }
 
@@ -54,8 +78,8 @@ namespace Events
         public BankAccount(decimal balance)
         {
             Balance = balance;
-            OverdrawnEventHandler = new EventHandler(OverdrawnEventMethod);      
-        }   
+            OverdrawnEventHandler = new EventHandler(OverdrawnEventMethod);
+        }
 
         public virtual void OnOverdrawnEventHandler(decimal subAmount)
         {
@@ -71,9 +95,17 @@ namespace Events
         private void OverdrawnEventMethod(object sender, EventArgs e)
         {
             OverdrawnEventArgs args = (OverdrawnEventArgs)e;
-            MainAccount bankAccount = (MainAccount)sender;
-
-            MessageBox.Show("Balansinda pul yoxdur " + args.SubAmount + " " + (bankAccount.Balance + bankAccount.SavingAccount.Balance));
+            if (sender is MainAccount mainAccount)
+            {
+                MessageBox.Show("Balansinda pul yoxdur " + args.SubAmount + " " + (mainAccount.Balance + mainAccount.SavingAccount.Balance));
+            }
+            else if (sender is SavingAccount savingAccount)
+            {
+            }
+            else
+            {
+                MessageBox.Show("Balansinda pul yoxdur " + args.SubAmount);
+            }
         }
 
         public decimal GetBalance() => Balance;
@@ -86,6 +118,6 @@ namespace Events
             SubAmount = subAmount;
         }
 
-        public decimal SubAmount { get; set; }       
+        public decimal SubAmount { get; set; }
     }
 }

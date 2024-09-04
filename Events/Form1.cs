@@ -69,5 +69,14 @@ namespace Events
                 txtSecondAccountBalance.Text = _secondAccount.GetBalance().ToString();
             }
         }
+
+        private void btnSecondAccountWithdraw_Click(object sender, EventArgs e)
+        {
+            if(decimal.TryParse(txtSecondAccountWithdrawValue.Text, out decimal value))
+            {
+                _secondAccount.Withdraw(value);
+                txtSecondAccountBalance.Text = _secondAccount.GetBalance().ToString();
+            }
+        }
     }
 }

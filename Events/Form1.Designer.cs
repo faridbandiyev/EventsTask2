@@ -221,6 +221,7 @@
             this.btnSecondAccountWithdraw.TabIndex = 11;
             this.btnSecondAccountWithdraw.Text = "Məxaric";
             this.btnSecondAccountWithdraw.UseVisualStyleBackColor = true;
+            this.btnSecondAccountWithdraw.Click += new System.EventHandler(this.btnSecondAccountWithdraw_Click);
             // 
             // btnSecondAccountDeposit
             // 
